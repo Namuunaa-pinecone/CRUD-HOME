@@ -53,10 +53,106 @@ app.post("/product", (request, response) => {
 
     dbData.push(newProduct);
 
-    response.json({
-      success: true,
-      products: dbData,
+    fs.writeFile("./data/products.json", JSON.stringify(dbData), (error) => {
+      if (error) {
+        response.json({
+          success: false,
+          error: error,
+        });
+      } else {
+        response.json({
+          success: true,
+          product: newProduct,
+        });
+      }
     });
+  });
+});
+
+app.delete("/product", (request, response) => {
+  const { productId } = request.body;
+
+  fs.readFile("./data/products.json", "utf-8", (readError, data) => {
+    if (readError) {
+      response.json({
+        success: false,
+        error: error,
+      });
+    }
+
+    let dbData = data ? JSON.parse(data) : [];
+
+    const filteredData = dbData.filter((data) => data?.id !== productId);
+
+    if (filteredData.length === dbData.length) {
+      response.json({
+        success: false,
+        error: "Product id not found",
+      });
+    }
+
+    fs.writeFile(
+      "./data/products.json",
+      JSON.stringify(filteredData),
+      (error) => {
+        if (error) {
+          response.json({
+            success: false,
+            error: error,
+          });
+        } else {
+          response.json({
+            success: true,
+            products: filteredData,
+          });
+        }
+      }
+    );
+  });
+});
+
+app.put("/product", (request, response) => {
+  const { productId, productName, category, price } = request.body;
+
+  fs.readFile("./data/products.json", "utf-8", (readError, data) => {
+    if (readError) {
+      response.json({
+        success: false,
+        error: error,
+      });
+    }
+
+    let dbData = data ? JSON.parse(data) : [];
+
+    const editedData = dbData.map((data) => {
+      if (data?.id === productId) {
+        return {
+          productId,
+          productName,
+          category,
+          price,
+        };
+      }
+      return data;
+    });
+
+    fs.writeFile(
+      "./data/products.json",
+      JSON.stringify(editedData),
+      (error) => {
+        if (error) {
+          response.json({
+            success: false,
+            error: error,
+          });
+        } else {
+          response.json({
+            success: true,
+            products: editedData,
+          });
+        }
+      }
+    );
   });
 });
 
