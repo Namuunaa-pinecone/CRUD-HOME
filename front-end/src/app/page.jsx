@@ -1,8 +1,27 @@
 "use client";
 
 import { Card, CreateModal } from "@/components/ui";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [products, setProducts] = useState([]);
+
+  const BACKEND_ENDPOINT = "http://localhost:2222";
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(`${BACKEND_ENDPOINT}/products`);
+      const responseData = await response.json();
+      setProducts(responseData.products);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
   return (
     <div className="w-full flex justify-center">
       <div className="container">
@@ -10,13 +29,9 @@ export default function Home() {
           <CreateModal />
         </div>
         <div className="grid grid-cols-3 gap-6">
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+          {products?.map((product) => {
+            return <Card key={product.id} product={product} />;
+          })}
         </div>
       </div>
     </div>
