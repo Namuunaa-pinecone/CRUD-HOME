@@ -1,12 +1,11 @@
 "use client";
 
 import { Card, CreateModal } from "@/components/ui";
+import { BACKEND_ENDPOINT } from "@/constants/constant";
 import { useEffect, useState } from "react";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
-
-  const BACKEND_ENDPOINT = "http://localhost:2222";
 
   const fetchProducts = async () => {
     try {
