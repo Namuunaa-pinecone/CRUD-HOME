@@ -16,8 +16,6 @@ export const EditModal = ({ product: productProps }) => {
       }),
     };
 
-    console.log(product);
-
     await fetch(`${BACKEND_ENDPOINT}/product`, options);
   };
 
