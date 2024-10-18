@@ -1,19 +1,24 @@
+import { BACKEND_ENDPOINT } from "@/constants/constant";
 import { useState } from "react";
 
 export const EditModal = ({ product: productProps }) => {
   const [product, setProduct] = useState(productProps);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (id) => {
     const options = {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(product),
+      body: JSON.stringify({
+        id,
+        ...product,
+      }),
     };
 
-    await fetch(`{BACKEND_ENDPOINT}/product`, options);
+    console.log(product);
+
+    await fetch(`${BACKEND_ENDPOINT}/product`, options);
   };
 
   const handleInputChange = (event) => {
@@ -28,7 +33,6 @@ export const EditModal = ({ product: productProps }) => {
     });
   };
 
-  console.log(product);
   return (
     <div>
       <button
@@ -66,7 +70,10 @@ export const EditModal = ({ product: productProps }) => {
               value={product?.price}
             />
           </div>
-          <button className="btn btn-primary mt-4" onClick={handleSubmit}>
+          <button
+            className="btn btn-primary mt-4"
+            onClick={() => handleSubmit(productProps.id)}
+          >
             Submit
           </button>
         </div>

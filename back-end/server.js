@@ -70,7 +70,7 @@ app.post("/product", (request, response) => {
 });
 
 app.delete("/product", (request, response) => {
-  const { productId } = request.body;
+  const { id } = request.body;
 
   fs.readFile("./data/products.json", "utf-8", (readError, data) => {
     if (readError) {
@@ -82,7 +82,7 @@ app.delete("/product", (request, response) => {
 
     let dbData = data ? JSON.parse(data) : [];
 
-    const filteredData = dbData.filter((data) => data?.id !== productId);
+    const filteredData = dbData.filter((data) => data?.id !== id);
 
     if (filteredData.length === dbData.length) {
       response.json({
@@ -112,7 +112,7 @@ app.delete("/product", (request, response) => {
 });
 
 app.put("/product", (request, response) => {
-  const { productId, productName, category, price } = request.body;
+  const { id, productName, category, price } = request.body;
 
   fs.readFile("./data/products.json", "utf-8", (readError, data) => {
     if (readError) {
@@ -125,9 +125,9 @@ app.put("/product", (request, response) => {
     let dbData = data ? JSON.parse(data) : [];
 
     const editedData = dbData.map((data) => {
-      if (data?.id === productId) {
+      if (data?.id === id) {
         return {
-          productId,
+          id,
           productName,
           category,
           price,
